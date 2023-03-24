@@ -2,10 +2,10 @@ import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom'
-import Cookies from 'js-cookie';
-import Button from '@mui/material/Button';
 import Radio from '@mui/material/Radio';
+import Button from '@mui/material/Button';
 import {DataGrid} from '@mui/x-data-grid';
+import Cookies from 'js-cookie';
 import {SERVER_URL} from '../constants.js'
 
 // NOTE:  for OAuth security, http request must have
@@ -35,6 +35,7 @@ class Assignment extends React.Component {
       if (Array.isArray(responseData.assignments)) {
         //  add to each assignment an "id"  This is required by DataGrid  "id" is the row index in the data grid table 
         this.setState({ assignments: responseData.assignments.map((assignment, index) => ( { id: index, ...assignment } )) });
+      console.log(this.state.assignments);
       } else {
         toast.error("Fetch failed.", {
           position: toast.POSITION.BOTTOM_LEFT
@@ -58,7 +59,7 @@ class Assignment extends React.Component {
         renderCell: (params) => (
           <div>
           <Radio
-            checked={params.row.id == this.state.selected}
+            checked={params.row.id === this.state.selected}
             onChange={this.onRadioClick}
             value={params.row.id}
             color="default"
@@ -79,10 +80,14 @@ class Assignment extends React.Component {
               <div style={{ height: 450, width: '100%', align:"left"   }}>
                 <DataGrid rows={this.state.assignments} columns={columns} />
               </div>                
-            <Button component={Link} to={{pathname:'/gradebook',   assignment: assignmentSelected }} 
+            <Button id="new_grade" component={Link} to={{pathname:'/gradebook',   assignment: assignmentSelected }} 
                     variant="outlined" color="primary" disabled={this.state.assignments.length===0}  style={{margin: 10}}>
               Grade
             </Button>
+         <Button id="new_assignment" component={Link} to={{pathname:'/addAssignment' }}
+               variant="outlined" color="primary" style={{margin:10}}>
+           New Assignment
+         </Button>
             <ToastContainer autoClose={1500} /> 
           </div>
       )
